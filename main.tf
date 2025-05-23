@@ -3,6 +3,7 @@ resource "azurerm_resource_group" "rg" {
   location = var.rg_location
 }
 
+
 resource "azurerm_storage_account" "storageAccount" {
   name                     = var.storageAccount_name
   resource_group_name      = azurerm_resource_group.rg.name
