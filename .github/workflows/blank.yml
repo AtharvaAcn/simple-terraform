@@ -35,3 +35,12 @@ jobs:
 
       - name: "Run terraform init"
         run: terraform init
+
+      - name: "Run terraform fmt"
+        run: terraform fmt
+      
+      - name: "Run terraform validate"
+        run: terraform validate
+
+      - name: "Run terraform plan"
+        run: terraform plan
