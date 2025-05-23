@@ -1,0 +1,5 @@
+rg_name             = "staticWebsiteRG"
+rg_location         = "eastus2"
+storageAccount_name = "atoowebsitestorage"
+index_document      = "index.html"
+source_content      = "<h1> Hello from static website </h1>"
