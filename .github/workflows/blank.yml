@@ -6,6 +6,7 @@ name: CI
 on:
   pull_request:
     branches: [ "main" ]
+    types: [labeled]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -43,9 +44,7 @@ jobs:
         run: terraform plan
 
   apply:
-      if: |
-        github.event.pull_request.merged == true &&
-        contains(join(github.event.pull_request.labels.*.name, ','), 'apply')
+      if: github.event.pull_request.labels.*.name == "apply"
       needs: terraform
       runs-on: ubuntu-latest
   
@@ -56,9 +55,7 @@ jobs:
         - run: terraform apply -auto-approve
   
   destroy:
-    if: |
-      github.event.pull_request.merged == true &&
-      contains(join(github.event.pull_request.labels.*.name, ','), 'destroy')
+    if: github.event.pull_request.labels.*.name == "destroy"
     needs: terraform
     runs-on: ubuntu-latest
   
