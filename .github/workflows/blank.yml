@@ -4,11 +4,10 @@ name: CI
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+    types:
+      - closed
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -22,7 +21,7 @@ env:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  terraform:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -44,3 +43,29 @@ jobs:
 
       - name: "Run terraform plan"
         run: terraform plan
+
+  apply:
+      if: |
+        github.event.pull_request.merged == true &&
+        contains(join(github.event.pull_request.labels.*.name, ','), 'apply')
+      needs: terraform
+      runs-on: ubuntu-latest
+  
+      steps:
+        - uses: actions/checkout@v4
+        - uses: hashicorp/setup-terraform@v2.0.3
+        - run: terraform init
+        - run: terraform apply -auto-approve
+  
+  destroy:
+    if: |
+      github.event.pull_request.merged == true &&
+      contains(join(github.event.pull_request.labels.*.name, ','), 'destroy')
+    needs: terraform
+    runs-on: ubuntu-latest
+  
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v2.0.3
+      - run: terraform init
+      - run: terraform destroy -auto-approve
