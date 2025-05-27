@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v4.6.2
         with:
           name: "tfplan"
-          path: /tfplan/tfplan.tfplan
+          path: tfplan.tfplan
 
   apply:
     environment: production
@@ -80,7 +80,7 @@ jobs:
       with:
         path: tfplan
         
-    - run: terraform apply -auto-approve tfplan
+    - run: terraform apply -auto-approve /tfplan/tfplan.tfplan
 
   destroy:
     environment: production
