@@ -54,7 +54,7 @@ jobs:
         run: terraform plan
 
   apply:
-    environment: prodcution
+    environment: production
     if: contains(github.event.pull_request.labels.*.name ,'apply')
     needs: terraform
     runs-on: ubuntu-latest
