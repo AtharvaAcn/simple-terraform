@@ -51,13 +51,13 @@ jobs:
         run: terraform validate
 
       - name: "Run terraform plan"
-        run: terraform plan -out=tfplan
+        run: terraform plan -out=tfplan.tfplan
 
       - name: "Upload plan"
         uses: actions/upload-artifact@v4.6.2
         with:
           name: "tfplan"
-          path: tfplan
+          path: /tfplan/tfplan.tfplan
 
   apply:
     environment: production
