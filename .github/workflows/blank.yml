@@ -20,11 +20,14 @@ on:
 permissions:
   id-token: write
   contents: read
+
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  
+ 
   # This workflow contains a single job called "build"
   terraform:
+    environment: production
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -51,6 +54,7 @@ jobs:
         run: terraform plan
 
   apply:
+      environment: production
       if: github.event.pull_request.labels.*.name == "apply"
       needs: terraform
       runs-on: ubuntu-latest
@@ -58,10 +62,16 @@ jobs:
       steps:
         - uses: actions/checkout@v4
         - uses: hashicorp/setup-terraform@v2.0.3
+        - uses: Azure/login@v2.3.0
+          with:
+            client-id: ${{secrets.AZURE_CLIENT_ID}}
+            tenant-id: ${{secrets.AZURE_TENANT_ID}}
+            subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
         - run: terraform init
         - run: terraform apply -auto-approve
   
   destroy:
+    environment: production
     if: github.event.pull_request.labels.*.name == "destroy"
     needs: terraform
     runs-on: ubuntu-latest
@@ -69,5 +79,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v2.0.3
+      - uses: Azure/login@v2.3.0
+        with:
+          client-id: ${{secrets.AZURE_CLIENT_ID}}
+          tenant-id: ${{secrets.AZURE_TENANT_ID}}
+          subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
       - run: terraform init
       - run: terraform destroy -auto-approve
