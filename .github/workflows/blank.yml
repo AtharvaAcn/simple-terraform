@@ -14,7 +14,7 @@ on:
 env:
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.ASURE_TENANT_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
   ARM_USE_OIDC: true
 #   ARM_CLIENT_SECRET: ${{secrets.ARM_CLIENT_SECRET}}
 
@@ -56,7 +56,7 @@ jobs:
       - name: "Upload plan"
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: "tf plan"
+          name: "tfplan"
           path: tfplan
 
   apply:
