@@ -53,7 +53,8 @@ jobs:
         run: terraform plan
 
   apply:
-    if: github.event.pull_request.labels.*.name == "apply"
+    environment: prodcution
+    if: contains(github.event.pull_request.labels.*.name ,'apply')
     needs: terraform
     runs-on: ubuntu-latest
 
@@ -70,7 +71,7 @@ jobs:
 
   destroy:
     environment: production
-    if: github.event.pull_request.labels.*.name == "destroy"
+    if: contains(github.event.pull_request.labels.*.name, 'destroy')
     needs: terraform
     runs-on: ubuntu-latest
 
