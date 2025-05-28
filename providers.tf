@@ -6,14 +6,14 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name = "tfstate"
+    resource_group_name  = "tfstate"
     storage_account_name = "tfstate930"
-    container_name = "tfstate"
-    key = "terraform.tfstate"
+    container_name       = "tfstate"
+    key                  = "simple-vm.tfstate"
   }
 }
 
 provider "azurerm" {
   features {}
-  resource_provider_registrations="none"
+  resource_provider_registrations = "none"
 }
