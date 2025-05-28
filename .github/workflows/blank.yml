@@ -14,7 +14,7 @@ on:
 env:
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.ASURE_TENANT_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
   ARM_USE_OIDC: true
 #   ARM_CLIENT_SECRET: ${{secrets.ARM_CLIENT_SECRET}}
 
@@ -51,7 +51,13 @@ jobs:
         run: terraform validate
 
       - name: "Run terraform plan"
-        run: terraform plan
+        run: terraform plan -out=tfplan
+
+      - name: "Upload plan"
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: tfplan
+          path: tfplan
 
   apply:
     environment: production
@@ -68,13 +74,19 @@ jobs:
         tenant-id: ${{secrets.AZURE_TENANT_ID}}
         subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
     - run: terraform init
-    - run: terraform apply -auto-approve
+
+    - name: "Download plan"
+      uses: actions/download-artifact@v4.3.0
+      with:
+        name: tfplan
+        
+    - run: terraform apply -auto-approve tfplan
 
   destroy:
     environment: production
     if: contains(github.event.pull_request.labels.*.name, 'destroy')
     needs: terraform
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
 
     steps:
     - uses: actions/checkout@v4
