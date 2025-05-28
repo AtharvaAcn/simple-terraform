@@ -63,7 +63,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   name                            = "terra-vm"
   resource_group_name             = azurerm_resource_group.rg.name
   location                        = azurerm_resource_group.rg.location
-  size                            = "Standard_DS2_v3"
+  size                            = "Standard_D2s_v3"
   admin_username                  = "adminuser"
   admin_password                  = "Password@123"
   disable_password_authentication = "false"
