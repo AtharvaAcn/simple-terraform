@@ -6,7 +6,7 @@ name: CI
 on:
   pull_request:
     branches: ["main"]
-    types: [labeled]
+    types: [labeled, synchronize]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -29,7 +29,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     environment:
-        name: production
+      name: production
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -66,35 +66,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: hashicorp/setup-terraform@v2.0.3
-    - uses: Azure/login@v2.3.0
-      with:
-        client-id: ${{secrets.AZURE_CLIENT_ID}}
-        tenant-id: ${{secrets.AZURE_TENANT_ID}}
-        subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
-    - run: terraform init
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v2.0.3
+      - uses: Azure/login@v2.3.0
+        with:
+          client-id: ${{secrets.AZURE_CLIENT_ID}}
+          tenant-id: ${{secrets.AZURE_TENANT_ID}}
+          subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
+      - run: terraform init
 
-    - name: "Download plan"
-      uses: actions/download-artifact@v4.3.0
-      with:
-        name: tfplan
-        
-    - run: terraform apply -auto-approve tfplan
+      - name: "Download plan"
+        uses: actions/download-artifact@v4.3.0
+        with:
+          name: tfplan
+
+      - run: terraform apply -auto-approve tfplan
 
   destroy:
     environment: production
     if: contains(github.event.pull_request.labels.*.name, 'destroy')
     needs: terraform
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: hashicorp/setup-terraform@v2.0.3
-    - uses: Azure/login@v2.3.0
-      with:
-        client-id: ${{secrets.AZURE_CLIENT_ID}}
-        tenant-id: ${{secrets.AZURE_TENANT_ID}}
-        subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
-    - run: terraform init
-    - run: terraform destroy -auto-approve
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v2.0.3
+      - uses: Azure/login@v2.3.0
+        with:
+          client-id: ${{secrets.AZURE_CLIENT_ID}}
+          tenant-id: ${{secrets.AZURE_TENANT_ID}}
+          subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
+      - run: terraform init
+      - run: terraform destroy -auto-approve

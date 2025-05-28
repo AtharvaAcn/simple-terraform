@@ -1,5 +1,3 @@
-rg_name             = "staticWebsiteRG"
-rg_location         = "eastus2"
-storageAccount_name = "atharvaacntfwebsite"
-index_document      = "index.html"
-source_content      = "<h1> Hello from static website </h1>"
+rg_name     = "simple-vm"
+rg_location = "ukwest"
+vnet_name   = "simple-vnet"

@@ -1,23 +1,15 @@
-variable "rg_location" {
-  type = string
-}
-
 variable "rg_name" {
-  type = string
+
 }
 
-variable "storageAccount_name" {
-  type = string
+variable "rg_location" {
+
 }
 
-variable "index_document" {
-  type = string
+variable "vnet_name" {
+
 }
 
-variable "source_content" {
-  type = string
-}
-
-output "website_url" {
-  value = azurerm_storage_blob.blobStorage.url
+output "public_ip_address" {
+  value = azurerm_linux_virtual_machine.vm.public_ip_address
 }
